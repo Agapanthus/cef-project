@@ -63,25 +63,10 @@ find_package(CEF REQUIRED)
 # Python configuration.
 #
 
-# Support specification of the Python executable path via the command-line.
-if(DEFINED ENV{PYTHON_EXECUTABLE})
-  file(TO_CMAKE_PATH "$ENV{PYTHON_EXECUTABLE}" PYTHON_EXECUTABLE)
-endif()
+find_package(Python2 COMPONENTS Interpreter Development)
 
-if(NOT PYTHON_EXECUTABLE)
-  unset(PYTHON_EXECUTABLE)
 
-  # Find the python interpreter.
-  find_package(PythonInterp)
-
-  if(NOT ${PYTHONINTERP_FOUND})
-    message(FATAL_ERROR "A Python installation is required. Set the "
-                        "PYTHON_EXECUTABLE environment variable to explicitly "
-                        "specify the Python executable path.")
-  endif()
-endif()
-
-message(STATUS "Using Python: ${PYTHON_EXECUTABLE}")
+message(STATUS "Using Python: ${Python2_EXECUTABLE}")
 
 
 #
@@ -101,7 +86,7 @@ endif()
 
 message(STATUS "Downloading clang-format from Google Storage...")
 execute_process(
-  COMMAND "${PYTHON_EXECUTABLE}"
+  COMMAND "${Python2_EXECUTABLE}"
           "tools/buildtools/download_from_google_storage.py"
           "--no_resume"
           "--platform=${GS_PLATFORM}"
